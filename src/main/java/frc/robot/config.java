@@ -13,11 +13,14 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.util.Units;
 
 public class config {
-    public static final double drive_kS = 0.22;
-    private static final double max_speed_rotations_ps = Units.radiansToRotations(constants.swerve.max_module_speed_mps / constants.swerve.wheel_radius);
-    private static final double drive_kV = (12.0 - drive_kS) / max_speed_rotations_ps;
+    public static final String can_ivore = "canivore";
+    public static final String drive_canbus = can_ivore;
 
     public final class swerve {
+        public static final double drive_kS = 0.22;
+        private static final double max_speed_rotations_ps = Units.radiansToRotations(constants.swerve.max_module_speed_mps / constants.swerve.wheel_radius);
+        private static final double drive_kV = (12.0 - drive_kS) / max_speed_rotations_ps;
+
         public static TalonFXConfiguration drive_configs(InvertedValue inversion) {
             return new TalonFXConfiguration()
                 .withCurrentLimits(new CurrentLimitsConfigs()

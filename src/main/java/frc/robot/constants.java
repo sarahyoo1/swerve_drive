@@ -5,7 +5,6 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.util.Units;
 
 public class constants {
-    public static final String can_ivore = "canivore";
 
     public final class ids {
         public static final int can_swerve_fl_turn = 3;
@@ -25,6 +24,10 @@ public class constants {
         
         public static final int can_pigeon = 10;
         public static final int controller = 0;
+
+        public static final int turret_motor = 14;
+        public static final int turret_gear_mini = 2;
+        public static final int turret_gear_minier = 3;
     }
 
     public final class swerve {
@@ -61,6 +64,7 @@ public class constants {
         private static final double k = 1;
         public static final double wheel_diameter = Units.inchesToMeters(3.75) * k;
         public static final double wheel_radius = wheel_diameter / 2.0;
+        public static final double wheel_circumference = wheel_diameter * Math.PI;
         public static final double track_width = Units.inchesToMeters(21);
         public static final SwerveDriveKinematics drive_kinematics = new SwerveDriveKinematics(
             new Translation2d(wheel_radius, track_width),
@@ -68,5 +72,11 @@ public class constants {
             new Translation2d(wheel_radius, track_width),
             new Translation2d(wheel_radius, track_width)
         );
+    }
+
+    public final class turret {
+        public static final int main_gear = 46;
+        public static final int mini_gear = 15;
+        public static final int minier_gear = 11;
     }
 }
