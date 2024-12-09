@@ -51,9 +51,9 @@ public class turret extends SubsystemBase {
         for (int i = 0; i < max_candidates; ++i) {
             double turret_candidate = base + i * modulo;
             //double corresponding_minier = turret_candidate % minier_ratio; maybe?
-            double corresponding_minier = (double) turret_candidate / (double) minier_ratio;
-            if (Math.abs(corresponding_minier) > 1) {
-                corresponding_minier = Math.abs(corresponding_minier - (int)corresponding_minier);
+            double corresponding_minier = Math.abs((double) turret_candidate / (double) minier_ratio);
+            if (corresponding_minier > 1) {
+                corresponding_minier = corresponding_minier - (int) corresponding_minier;
             }
             //or...
             // double corresponding_minier = MathUtil.inputModulus(turret_candidate / minier_ratio, 0, 1);

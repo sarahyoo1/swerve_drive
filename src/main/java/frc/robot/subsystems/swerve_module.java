@@ -26,13 +26,12 @@ public class swerve_module {
     ) {
         drive_motor = new TalonFX(drive_motor_id, config.can_ivore);
         turn_motor = new TalonFX(turn_motor_id, config.can_ivore);
-
         drive_motor.getConfigurator().apply(config.swerve.drive_configs(InvertedValue.Clockwise_Positive));
         turn_motor.getConfigurator().apply(config.swerve.turn_configs(InvertedValue.Clockwise_Positive));
 
         abs = new DutyCycleEncoder(abs_encoder_id);
         abs.setDutyCycleRange(1.0 / 4096, 4095.0 / 4096);
-        abs.setPositionOffset(abs.getAbsolutePosition() - offset);
+        abs.setPositionOffset(offset);
 
         turn_pid = new PIDController(0.5, 0, 0); //TODO: adjust turn motor pid 
         turn_pid.enableContinuousInput(-Math.PI, Math.PI);
