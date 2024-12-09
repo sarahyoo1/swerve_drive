@@ -50,7 +50,7 @@ public class swerve_joystick_commands extends Command {
        y_speed = y_limiter.calculate(y_speed) * spd_factor;
        turn_speed = turn_limiter.calculate(turn_speed) * spd_factor;
     
-        ChassisSpeeds chassis_speeds = ChassisSpeeds.fromFieldRelativeSpeeds(x_speed, y_speed, turn_speed, swerve_subsystem.get_rotation2d());
+        ChassisSpeeds chassis_speeds = ChassisSpeeds.fromFieldRelativeSpeeds(x_speed, y_speed, turn_speed, swerve_subsystem.get_heading());
         SwerveModuleState[] module_states = constants.swerve.drive_kinematics.toSwerveModuleStates(chassis_speeds);
         swerve_subsystem.set_module_states(module_states);
     }

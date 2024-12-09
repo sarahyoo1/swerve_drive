@@ -6,12 +6,10 @@ import com.ctre.phoenix6.signals.InvertedValue;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.config;
-import frc.robot.constants;
 
 public class swerve_module {
     private final TalonFX drive_motor;
@@ -34,12 +32,12 @@ public class swerve_module {
 
         abs = new DutyCycleEncoder(abs_encoder_id);
         abs.setDutyCycleRange(1.0 / 4096, 4095.0 / 4096);
-        abs.setPositionOffset(get_abs_value() - offset);
+        abs.setPositionOffset(abs.getAbsolutePosition() - offset);
 
         turn_pid = new PIDController(0.5, 0, 0); //TODO: adjust turn motor pid 
         turn_pid.enableContinuousInput(-Math.PI, Math.PI);
 
-        SmartDashboard.putNumber("abs value " + module_name, get_abs_value());
+        SmartDashboard.putNumber("abs value " + module_name, abs.getAbsolutePosition());
     }
 
     public double get_drive_pos() {
@@ -58,31 +56,14 @@ public class swerve_module {
         return turn_motor.getVelocity().getValue();
     }
 
-    public double get_abs_rad() {
-        return abs.getDistancePerRotation() * Math.PI * 2;
-    }
-    
-    public double get_abs_value() {
-        return abs.getAbsolutePosition();
-    }
-
-    public Rotation2d get_rotation2d() {
-        return Rotation2d.fromRadians(get_turn_pos());
-    }
-
     public SwerveModuleState get_state() {
-        return new SwerveModuleState(get_drive_velocity(), get_rotation2d());
-    }
-
-    public SwerveModulePosition get_position() {
-        return new SwerveModulePosition(constants.swerve.wheel_circumference, get_rotation2d());
+        return new SwerveModuleState(get_drive_velocity(), Rotation2d.fromRotations(get_turn_pos()));
     }
 
     public void set_desired_state(SwerveModuleState state) {
         state = SwerveModuleState.optimize(state, get_state().angle);
         drive_motor.setControl(new PositionVoltage(state.speedMetersPerSecond / 2));
-        turn_motor.setControl(new PositionVoltage(state.angle.getRotations()));
-
+        turn_motor.setControl(new PositionVoltage(turn_pid.calculate(get_turn_pos(), state.angle.getRotations())));
         SmartDashboard.putString("Swerve[" + abs.getSourceChannel() + "] state", state.toString());
     }
 

@@ -17,20 +17,25 @@ public class turret extends SubsystemBase {
     private final DutyCycleEncoder mini, minier;
     private final SimpleMotorFeedforward ff = new SimpleMotorFeedforward(0.2, 0.02);
     private final PIDController pid = new PIDController(0.5, 0, 0);
+
+    private double target_deg = 0, target_degps = 0;
    
     public turret() {
         motor = new TalonFX(constants.ids.turret_motor, config.can_ivore);
         mini = new DutyCycleEncoder(constants.ids.turret_gear_mini);
         minier = new DutyCycleEncoder(constants.ids.turret_gear_minier);
-        //mini.setDistancePerRotation(0);
+        //mini.setDistancePerRotation(-1);
         mini.setDutyCycleRange(1.0/4096, 4095.0/4096);
         minier.setDutyCycleRange(1.0/4096, 4095.0/4096);
     }
 
     @Override
     public void periodic() {
+        motor.setVoltage(ff.calculate(target_deg) + pid.calculate(get_position_degrees(), target_degps));
         SmartDashboard.putNumber("abs_minier", minier.getAbsolutePosition());
         SmartDashboard.putNumber("abs_mini", mini.getAbsolutePosition());
+        SmartDashboard.putNumber("turret_target_deg", target_deg);
+        SmartDashboard.putNumber("turret_target_degps", target_degps);
     }
 
     public double get_position_degrees() {
@@ -62,7 +67,9 @@ public class turret extends SubsystemBase {
         return Units.rotationsToDegrees(closest);
     }
 
-    public void turn(double degrees, double degrees_per_sec) { //TODO: turn turret
-        motor.setVoltage(ff.calculate(degrees_per_sec) + pid.calculate(get_position_degrees(), degrees));
+    //TODO: can i change target values in smartdashboard?
+    public void set_target(double degrees, double degrees_per_sec) {
+        target_deg = degrees;
+        target_degps = degrees_per_sec;
     }
 }

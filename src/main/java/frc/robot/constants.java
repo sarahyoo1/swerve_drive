@@ -61,16 +61,17 @@ public class constants {
         public static final double max_module_speed_mps = 4.572;
         public static final double max_speed_mps = 4.3;
 
-        private static final double k = 1;
+        private static final double k = 1.01634;
         public static final double wheel_diameter = Units.inchesToMeters(3.75) * k;
         public static final double wheel_radius = wheel_diameter / 2.0;
-        public static final double wheel_circumference = wheel_diameter * Math.PI;
-        public static final double track_width = Units.inchesToMeters(21);
-        public static final SwerveDriveKinematics drive_kinematics = new SwerveDriveKinematics(
-            new Translation2d(wheel_radius, track_width),
-            new Translation2d(wheel_radius, track_width),
-            new Translation2d(wheel_radius, track_width),
-            new Translation2d(wheel_radius, track_width)
+        
+        public static final double half_track_width_meters = Units.inchesToMeters(21) / 2;
+        public static final double half_wheel_base_meters = 0.52705 / 2;
+        public static final SwerveDriveKinematics drive_kinematics = new SwerveDriveKinematics( //TODO: drive kinematics
+            new Translation2d(half_wheel_base_meters, half_track_width_meters), //fl
+            new Translation2d(half_wheel_base_meters, -half_track_width_meters), //fr
+            new Translation2d(-half_wheel_base_meters, half_track_width_meters), //bl
+            new Translation2d(-half_wheel_base_meters, -half_track_width_meters) //br
         );
     }
 
@@ -78,5 +79,10 @@ public class constants {
         public static final int main_gear = 46;
         public static final int mini_gear = 15;
         public static final int minier_gear = 11;
+    }
+
+    public final class auto { //TODO: auto constants
+        public static final double k_max_velocity_mps = 0;
+        public static final double k_max_acceleration_mps2 = 0;
     }
 }

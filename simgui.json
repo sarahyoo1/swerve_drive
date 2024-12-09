@@ -12,7 +12,23 @@
       }
     }
   },
+  "NetworkTables": {
+    "Persistent Values": {
+      "open": false
+    },
+    "Retained Values": {
+      "open": false
+    },
+    "transitory": {
+      "SmartDashboard": {
+        "open": true
+      }
+    }
+  },
   "NetworkTables Info": {
+    "Clients": {
+      "open": true
+    },
     "visible": true
   }
 }

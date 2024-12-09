@@ -4,7 +4,6 @@
 
 package frc.robot;
 
-import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -13,15 +12,15 @@ import frc.robot.commands.swerve_joystick_commands;
 import frc.robot.subsystems.swerve_subsystem;
 
 public class RobotContainer {
-  private final XboxController controller = new XboxController(constants.ids.controller);
+  private final XboxController controller = new XboxController(constants.ids.controller); //TODO: what is CommandXboxController?
   private final swerve_subsystem swerve_subsystem = new swerve_subsystem();
-  
+ 
   public RobotContainer() {
     swerve_subsystem.setDefaultCommand(
       new swerve_joystick_commands(
       swerve_subsystem, 
       () -> controller.getLeftX(), 
-      () -> controller.getLeftY(), //TODO: check this out
+      () -> controller.getLeftY(), //TODO: should this be negative?
       () -> controller.getRightX() 
       )
     );
@@ -38,9 +37,6 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    //TODO: trajectory config
-    TrajectoryConfig trajectory_config = new TrajectoryConfig(0, 0);
-    //TODO: define PID controllers for auto (to track traj)
     return Commands.print("No autonomous command configured");
   }
 }
