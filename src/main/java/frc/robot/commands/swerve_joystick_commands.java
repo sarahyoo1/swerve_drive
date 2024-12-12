@@ -24,9 +24,9 @@ public class swerve_joystick_commands extends Command {
         this.left_x = left_x;
         this.left_y = left_y;
         this.right_x = right_x;
-        x_limiter = new SlewRateLimiter(1); //TODO: set rate limit. (or do i rlly need it)
-        y_limiter = new SlewRateLimiter(1);
-        turn_limiter = new SlewRateLimiter(1);
+        x_limiter = new SlewRateLimiter(3); //TODO: set rate limit. (or do i rlly need it)
+        y_limiter = new SlewRateLimiter(3);
+        turn_limiter = new SlewRateLimiter(3);
         addRequirements(swerve_subsystem);
     }
 
@@ -41,7 +41,7 @@ public class swerve_joystick_commands extends Command {
        y_speed = y_limiter.calculate(y_speed) * spd_factor;
        turn_speed = turn_limiter.calculate(turn_speed) * spd_factor;
     
-        ChassisSpeeds chassis_speeds = ChassisSpeeds.fromFieldRelativeSpeeds(x_speed, y_speed, turn_speed, swerve_subsystem.get_heading());
+        ChassisSpeeds chassis_speeds = ChassisSpeeds.fromRobotRelativeSpeeds(x_speed, y_speed, turn_speed, swerve_subsystem.get_heading());
         SwerveModuleState[] module_states = constants.swerve.drive_kinematics.toSwerveModuleStates(chassis_speeds);
         swerve_subsystem.set_module_states(module_states);
     }

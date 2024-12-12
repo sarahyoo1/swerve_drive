@@ -1,22 +1,20 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix6.controls.PositionVoltage;
+import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.config;
-import frc.robot.constants;
 
 public class swerve_module {
     private final TalonFX drive_motor;
     private final TalonFX turn_motor;
     private final DutyCycleEncoder abs;
-    private final PIDController turn_pid; 
     private SwerveModuleState desired = new SwerveModuleState();
 
     public swerve_module(
@@ -34,9 +32,6 @@ public class swerve_module {
         abs = new DutyCycleEncoder(abs_encoder_id);
         abs.setDutyCycleRange(1.0 / 4096, 4095.0 / 4096);
         abs.setPositionOffset(offset);
-
-        turn_pid = new PIDController(0.02, 0, 0); //TODO: adjust turn motor pid 
-        turn_pid.enableContinuousInput(-Math.PI, Math.PI);
 
         SmartDashboard.putNumber("abs value " + module_name, abs.getAbsolutePosition());
     }
@@ -67,9 +62,8 @@ public class swerve_module {
 
     public void set_desired_state(SwerveModuleState state) {
         desired = SwerveModuleState.optimize(state, get_state().angle);
-        // drive_motor.setControl(new PositionVoltage(state.speedMetersPerSecond / 2));
-        drive_motor.set(state.speedMetersPerSecond / constants.swerve.max_module_speed_mps);
-        turn_motor.setControl(new PositionVoltage(turn_pid.calculate(get_turn_pos(), state.angle.getRotations())));
+        drive_motor.setControl(new VelocityVoltage(state.speedMetersPerSecond));
+        turn_motor.setControl(new PositionVoltage(state.angle.getRotations()));
         SmartDashboard.putString("Swerve[" + abs.getSourceChannel() + "] state", state.toString());
     }
 

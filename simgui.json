@@ -1,4 +1,11 @@
 {
+  "HALProvider": {
+    "RoboRIO": {
+      "window": {
+        "visible": true
+      }
+    }
+  },
   "NTProvider": {
     "types": {
       "/FMSInfo": "FMSInfo",
@@ -6,11 +13,6 @@
       "/SmartDashboard/swerve_mechanism2d": "Mechanism2d"
     },
     "windows": {
-      "/SmartDashboard/Field": {
-        "window": {
-          "visible": true
-        }
-      },
       "/SmartDashboard/swerve_mechanism2d": {
         "window": {
           "visible": true

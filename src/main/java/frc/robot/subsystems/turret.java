@@ -16,7 +16,7 @@ public class turret extends SubsystemBase {
     private final TalonFX motor;
     private final DutyCycleEncoder mini, minier;
     private final SimpleMotorFeedforward ff = new SimpleMotorFeedforward(0.2, 0.02);
-    private final PIDController pid = new PIDController(0.02, 0, 0);
+    private final PIDController pid = new PIDController(0.2, 0, 0);
 
     private double target_deg = 30, target_degps = 0.1;
    
@@ -32,15 +32,15 @@ public class turret extends SubsystemBase {
     @Override
     public void periodic() {
         motor.setVoltage(ff.calculate(target_degps) + pid.calculate(get_position_degrees(), target_deg));
-        SmartDashboard.putNumber("abs_minier", minier.getAbsolutePosition() - 0.037);
-        SmartDashboard.putNumber("abs_mini", mini.getAbsolutePosition() - 0.037);
+        SmartDashboard.putNumber("abs_minier", minier.getAbsolutePosition() - constants.turret.offset_minier);
+        SmartDashboard.putNumber("abs_mini", mini.getAbsolutePosition() - constants.turret.offset_mini);
         SmartDashboard.putNumber("turret_target_deg", target_deg);
         SmartDashboard.putNumber("turret_target_degps", target_degps);
     }
 
     public double get_position_degrees() {
-        double mini_angle = mini.getAbsolutePosition() - 0.37; //TODO: get offest
-        double minier_angle = minier.getAbsolutePosition() - 0.037;
+        double mini_angle = mini.getAbsolutePosition() - constants.turret.offset_mini;
+        double minier_angle = minier.getAbsolutePosition() - constants.turret.offset_minier;
         double modulo = (double) constants.turret.mini_gear / (double) constants.turret.main_gear;
         double minier_ratio = (double) constants.turret.minier_gear / (double) constants.turret.main_gear;
 
@@ -50,7 +50,6 @@ public class turret extends SubsystemBase {
         double closest = 0;
         for (int i = 0; i < max_candidates; ++i) {
             double turret_candidate = base + i * modulo;
-
             double corresponding_minier = MathUtil.inputModulus(turret_candidate / minier_ratio, 0, 1);
             double diff = Math.abs(minier_angle - corresponding_minier);
             if (diff < smallest_diff) {
@@ -58,7 +57,6 @@ public class turret extends SubsystemBase {
                 closest = turret_candidate;
             }
         }
-
         return Units.rotationsToDegrees(closest);
     }
 

@@ -36,21 +36,16 @@ public class constants {
             fl("fl"),
             br("br"),
             bl("bl");
-
             public final String name;
-
             module_names(String name) {
                 this.name = name;
             }
         }
-
         public enum module_e {
             mk4i_L1(8.14, 150.0/7.0, (25.0 / 19.0) * (15.0 / 45.0)),
             mk4i_L2(6.75, 150.0/7.0, (27.0 / 17.0) * (15.0 / 45.0)),
             mk4i_L3(6.12, 150.0/7.0, (28.0 / 16.0) * (15.0 / 45.0));
-    
             public final double drive_ratio, steer_ratio, couple_ratio;
-
             module_e(double drive_ratio, double steer_ratio, double couple_ratio) {
                 this.drive_ratio = drive_ratio;
                 this.steer_ratio = steer_ratio;
@@ -72,7 +67,7 @@ public class constants {
             new Translation2d(-half_wheel_base_meters, half_wheel_base_meters), //bl
             new Translation2d(-half_wheel_base_meters, -half_wheel_base_meters) //br
         };
-        public static final SwerveDriveKinematics drive_kinematics = new SwerveDriveKinematics( //TODO: drive kinematics
+        public static final SwerveDriveKinematics drive_kinematics = new SwerveDriveKinematics( 
             mount_positions[0], mount_positions[1], mount_positions[2], mount_positions[3]
         );
     }
@@ -81,6 +76,8 @@ public class constants {
         public static final int main_gear = 46;
         public static final int mini_gear = 15;
         public static final int minier_gear = 11;
+        public static final double offset_mini = 0.37;
+        public static final double offset_minier = 0.037; 
     }
 
     public final class auto { //TODO: auto constants
