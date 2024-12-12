@@ -24,19 +24,24 @@ public class swerve_joystick_commands extends Command {
         this.left_x = left_x;
         this.left_y = left_y;
         this.right_x = right_x;
-        x_limiter = new SlewRateLimiter(3); //TODO: set rate limit. (or do i rlly need it)
+        x_limiter = new SlewRateLimiter(3);
         y_limiter = new SlewRateLimiter(3);
         turn_limiter = new SlewRateLimiter(3);
         addRequirements(swerve_subsystem);
     }
 
+    double getJoystickValue(double value) {
+        if (Math.abs(value) < 0.6) return 0; //why is Axis[2] increasing?
+        return value;
+    }
+
     @Override
     public void execute() {
-       double x_speed = -left_y.get();
-       double y_speed = -left_x.get();
-       double turn_speed = -right_x.get();
+       double x_speed = getJoystickValue(-left_y.get());
+       double y_speed = getJoystickValue(-left_x.get());
+       double turn_speed = getJoystickValue(-right_x.get());
        
-       double spd_factor = 0.4; //TODO: adjust speed factor
+       double spd_factor = 1; //TODO: adjust speed factor
        x_speed = x_limiter.calculate(x_speed) * spd_factor;
        y_speed = y_limiter.calculate(y_speed) * spd_factor;
        turn_speed = turn_limiter.calculate(turn_speed) * spd_factor;
