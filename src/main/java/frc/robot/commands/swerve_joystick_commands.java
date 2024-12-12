@@ -32,9 +32,9 @@ public class swerve_joystick_commands extends Command {
 
     @Override
     public void execute() {
-       double x_speed = Math.abs(left_x.get());
-       double y_speed = Math.abs(left_y.get());
-       double turn_speed = Math.abs(right_x.get());
+       double x_speed = left_x.get();
+       double y_speed =  left_y.get();
+       double turn_speed =  right_x.get();
        
        double spd_factor = 0.5; //TODO: adjust speed factor
        x_speed = x_limiter.calculate(x_speed) * spd_factor;

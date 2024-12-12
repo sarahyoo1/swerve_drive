@@ -67,11 +67,14 @@ public class constants {
         
         public static final double half_track_width_meters = Units.inchesToMeters(21) / 2;
         public static final double half_wheel_base_meters = 0.52705 / 2;
-        public static final SwerveDriveKinematics drive_kinematics = new SwerveDriveKinematics( //TODO: drive kinematics
+        public static final Translation2d[] mount_positions = {
             new Translation2d(half_wheel_base_meters, half_track_width_meters), //fl
             new Translation2d(half_wheel_base_meters, -half_track_width_meters), //fr
             new Translation2d(-half_wheel_base_meters, half_track_width_meters), //bl
             new Translation2d(-half_wheel_base_meters, -half_track_width_meters) //br
+        };
+        public static final SwerveDriveKinematics drive_kinematics = new SwerveDriveKinematics( //TODO: drive kinematics
+            mount_positions[0], mount_positions[1], mount_positions[2], mount_positions[3]
         );
     }
 

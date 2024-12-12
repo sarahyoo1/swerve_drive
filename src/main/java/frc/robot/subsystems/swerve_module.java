@@ -16,6 +16,7 @@ public class swerve_module {
     private final TalonFX turn_motor;
     private final DutyCycleEncoder abs;
     private final PIDController turn_pid; 
+    private SwerveModuleState desired = new SwerveModuleState();
 
     public swerve_module(
         int drive_motor_id, 
@@ -59,8 +60,12 @@ public class swerve_module {
         return new SwerveModuleState(get_drive_velocity(), Rotation2d.fromRotations(get_turn_pos()));
     }
 
+    public SwerveModuleState get_desired_state() {
+        return desired;
+    }
+
     public void set_desired_state(SwerveModuleState state) {
-        state = SwerveModuleState.optimize(state, get_state().angle);
+        desired = SwerveModuleState.optimize(state, get_state().angle);
         drive_motor.setControl(new PositionVoltage(state.speedMetersPerSecond / 2));
         turn_motor.setControl(new PositionVoltage(turn_pid.calculate(get_turn_pos(), state.angle.getRotations())));
         SmartDashboard.putString("Swerve[" + abs.getSourceChannel() + "] state", state.toString());

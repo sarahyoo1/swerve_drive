@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.config;
 import frc.robot.constants;
+import frc.robot.sim.swerve_mech2d;
 
 public class swerve_subsystem extends SubsystemBase {
     private final swerve_module front_left = new swerve_module(
@@ -44,6 +45,8 @@ public class swerve_subsystem extends SubsystemBase {
     );
 
     private final Pigeon2 gyro = new Pigeon2(constants.ids.can_pigeon, config.can_ivore);
+
+    private final swerve_mech2d mech = new swerve_mech2d(3, this);
    
     public swerve_subsystem() {
         new Thread(() -> {
@@ -54,6 +57,7 @@ public class swerve_subsystem extends SubsystemBase {
             
             }
         }).start();
+        mech.init();
     }
 
     public void zero_heading() {
@@ -67,6 +71,7 @@ public class swerve_subsystem extends SubsystemBase {
     @Override
     public void periodic() {
         SmartDashboard.putNumber("robot heading", get_heading().getDegrees());
+        mech.update(get_heading(), get_desired_states());
     }
 
     public void stop_modules() {
@@ -82,5 +87,23 @@ public class swerve_subsystem extends SubsystemBase {
         front_right.set_desired_state(desired_states[1]);
         back_left.set_desired_state(desired_states[2]);
         back_right.set_desired_state(desired_states[3]);
+    }
+
+    public SwerveModuleState[] get_states() {
+        return new SwerveModuleState[]{
+            front_left.get_state(),
+            front_right.get_state(),
+            back_left.get_state(),
+            back_right.get_state()
+        };
+    }
+
+    public SwerveModuleState[] get_desired_states() {
+        return new SwerveModuleState[]{
+            front_left.get_desired_state(),
+            front_right.get_desired_state(),
+            back_left.get_desired_state(),
+            back_right.get_desired_state()
+        };
     }
 }
