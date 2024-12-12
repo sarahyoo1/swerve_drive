@@ -33,7 +33,7 @@ public class swerve_module {
         abs.setDutyCycleRange(1.0 / 4096, 4095.0 / 4096);
         abs.setPositionOffset(offset);
 
-        turn_pid = new PIDController(0.5, 0, 0); //TODO: adjust turn motor pid 
+        turn_pid = new PIDController(0.02, 0, 0); //TODO: adjust turn motor pid 
         turn_pid.enableContinuousInput(-Math.PI, Math.PI);
 
         SmartDashboard.putNumber("abs value " + module_name, abs.getAbsolutePosition());
@@ -61,13 +61,13 @@ public class swerve_module {
 
     public void set_desired_state(SwerveModuleState state) {
         state = SwerveModuleState.optimize(state, get_state().angle);
-        drive_motor.setControl(new PositionVoltage(state.speedMetersPerSecond / 2));
+        drive_motor.set(state.speedMetersPerSecond);
         turn_motor.setControl(new PositionVoltage(turn_pid.calculate(get_turn_pos(), state.angle.getRotations())));
         SmartDashboard.putString("Swerve[" + abs.getSourceChannel() + "] state", state.toString());
     }
 
     public void stop() {
-        drive_motor.set(0);
-        turn_motor.set(0);
+        drive_motor.setVoltage(0);
+        turn_motor.setVoltage(0);
     }
 }

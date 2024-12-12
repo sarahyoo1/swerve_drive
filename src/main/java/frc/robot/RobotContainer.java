@@ -21,7 +21,7 @@ public class RobotContainer {
     swerve_subsystem.setDefaultCommand(
       new swerve_joystick_commands(
       swerve_subsystem, 
-      () -> controller.getLeftX(), 
+      () -> -controller.getLeftX(), 
       () -> controller.getLeftY(),
       () -> controller.getRightX() 
       )

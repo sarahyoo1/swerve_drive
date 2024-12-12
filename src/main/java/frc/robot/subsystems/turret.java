@@ -16,31 +16,31 @@ public class turret extends SubsystemBase {
     private final TalonFX motor;
     private final DutyCycleEncoder mini, minier;
     private final SimpleMotorFeedforward ff = new SimpleMotorFeedforward(0.2, 0.02);
-    private final PIDController pid = new PIDController(0.5, 0, 0);
+    private final PIDController pid = new PIDController(0.02, 0, 0);
 
-    private double target_deg = 0, target_degps = 0;
+    private double target_deg = 30, target_degps = 0.1;
    
     public turret() {
         motor = new TalonFX(constants.ids.turret_motor, config.can_ivore);
         mini = new DutyCycleEncoder(constants.ids.turret_gear_mini);
         minier = new DutyCycleEncoder(constants.ids.turret_gear_minier);
-        //mini.setDistancePerRotation(-1);
+        mini.setDistancePerRotation(-1);
         mini.setDutyCycleRange(1.0/4096, 4095.0/4096);
         minier.setDutyCycleRange(1.0/4096, 4095.0/4096);
     }
 
     @Override
     public void periodic() {
-        motor.setVoltage(ff.calculate(target_deg) + pid.calculate(get_position_degrees(), target_degps));
-        SmartDashboard.putNumber("abs_minier", minier.getAbsolutePosition());
-        SmartDashboard.putNumber("abs_mini", mini.getAbsolutePosition());
+        motor.setVoltage(ff.calculate(target_degps) + pid.calculate(get_position_degrees(), target_deg));
+        SmartDashboard.putNumber("abs_minier", minier.getAbsolutePosition() - 0.037);
+        SmartDashboard.putNumber("abs_mini", mini.getAbsolutePosition() - 0.037);
         SmartDashboard.putNumber("turret_target_deg", target_deg);
         SmartDashboard.putNumber("turret_target_degps", target_degps);
     }
 
     public double get_position_degrees() {
-        double mini_angle = mini.getAbsolutePosition(); //TODO: get offest
-        double minier_angle = minier.getAbsolutePosition();
+        double mini_angle = mini.getAbsolutePosition() - 0.37; //TODO: get offest
+        double minier_angle = minier.getAbsolutePosition() - 0.037;
         double modulo = (double) constants.turret.mini_gear / (double) constants.turret.main_gear;
         double minier_ratio = (double) constants.turret.minier_gear / (double) constants.turret.main_gear;
 
@@ -50,13 +50,8 @@ public class turret extends SubsystemBase {
         double closest = 0;
         for (int i = 0; i < max_candidates; ++i) {
             double turret_candidate = base + i * modulo;
-            //double corresponding_minier = turret_candidate % minier_ratio; maybe?
-            double corresponding_minier = Math.abs((double) turret_candidate / (double) minier_ratio);
-            if (corresponding_minier > 1) {
-                corresponding_minier = corresponding_minier - (int) corresponding_minier;
-            }
-            //or...
-            // double corresponding_minier = MathUtil.inputModulus(turret_candidate / minier_ratio, 0, 1);
+
+            double corresponding_minier = MathUtil.inputModulus(turret_candidate / minier_ratio, 0, 1);
             double diff = Math.abs(minier_angle - corresponding_minier);
             if (diff < smallest_diff) {
                 smallest_diff = diff;

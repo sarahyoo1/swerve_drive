@@ -59,19 +59,18 @@ public class constants {
         }
         
         public static final double max_module_speed_mps = 4.572;
-        public static final double max_speed_mps = 4.3;
 
         private static final double k = 1.01634;
         public static final double wheel_diameter = Units.inchesToMeters(3.75) * k;
         public static final double wheel_radius = wheel_diameter / 2.0;
         
-        public static final double half_track_width_meters = Units.inchesToMeters(21) / 2;
+        public static final double half_chassis_meters = Units.inchesToMeters(21) /2;
         public static final double half_wheel_base_meters = 0.52705 / 2;
         public static final SwerveDriveKinematics drive_kinematics = new SwerveDriveKinematics( //TODO: drive kinematics
-            new Translation2d(half_wheel_base_meters, half_track_width_meters), //fl
-            new Translation2d(half_wheel_base_meters, -half_track_width_meters), //fr
-            new Translation2d(-half_wheel_base_meters, half_track_width_meters), //bl
-            new Translation2d(-half_wheel_base_meters, -half_track_width_meters) //br
+            new Translation2d(half_wheel_base_meters, -half_chassis_meters), //fl
+            new Translation2d(half_wheel_base_meters, half_chassis_meters), //fr
+            new Translation2d(-half_wheel_base_meters, -half_chassis_meters), //bl
+            new Translation2d(-half_wheel_base_meters, half_chassis_meters) //br
         );
     }
 
